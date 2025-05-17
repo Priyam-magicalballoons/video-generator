@@ -11,7 +11,7 @@ cloudinary.config({
 
 // Allow 10MB file size (optional)
 export const config = {
-  maxBodySize: 10 * 1024 * 1024,
+  maxBodySize: "5mb",
 };
 
 export async function POST(req: NextRequest) {

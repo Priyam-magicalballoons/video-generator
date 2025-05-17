@@ -13,7 +13,11 @@ export async function isAuthenticate(id: string, password: string) {
     cookies().set({
         name : "user",
         value : data.id,
-        maxAge : 60 * 60 *24*7
+        maxAge : 60 * 60 *24*7,
+        httpOnly : true,
+        secure : process.env.NODE_ENV === 'production',
+        sameSite : "lax",
+        path : "/"
     })
     return {
       status: 200,
