@@ -9,10 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-// Allow 10MB file size (optional)
-export const config = {
-  maxBodySize: "5mb",
-};
+export const maxBodySize = '5mb';
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
