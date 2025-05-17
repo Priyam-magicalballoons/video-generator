@@ -55,26 +55,26 @@ const router = useRouter()
     setVideoLoading(true)
     const formData = new FormData();
     formData.append('file', file);
-//      const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
-//     const { url } = await res.json();
-//    const uploadRes = await fetch(url, {
-//   method: 'PUT',
-//   headers: {
-//     'Content-Type': file.type,
-//   },
-//   body: file,
-// });
+     const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
+    const { url } = await res.json();
+   const uploadRes = await fetch(url, {
+  method: 'PUT',
+  headers: {
+    'Content-Type': file.type,
+  },
+  body: file,
+});
 
-// if (!uploadRes.ok) {
-//   toast("Upload failed. Please try again.");
-//   setVideoLoading(false);
-//   return;
-// }
-    //    console.log(url.split('?')[0])
-    //    setVideoUrl(url.split('?')[0])
+if (!uploadRes.ok) {
+  toast("Upload failed. Please try again.");
+  setVideoLoading(false);
+  return;
+}
+       console.log(url.split('?')[0])
+       setVideoUrl(url.split('?')[0])
 
-    const data = await uploadFile(formData)
-    setVideoUrl(data.url!)
+    // const data = await uploadFile(formData)
+    // setVideoUrl(data.url!)
 
     const reader = new FileReader();
     reader.onloadend = () => {
