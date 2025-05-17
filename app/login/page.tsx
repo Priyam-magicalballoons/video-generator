@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import React, { useEffect, useState } from 'react'
-import { isAuthenticate } from '../api/auth/route'
+import { isAuthenticate } from '../actions/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
