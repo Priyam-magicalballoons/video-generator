@@ -15,7 +15,6 @@ import { getAllDoctors } from "@/app/actions/doctor.actions";
 import { useRouter } from "next/navigation";
 import { useDoctorStore } from "@/lib/stores/useDoctorStore";
 import { useModuleStore } from "@/lib/stores/useModuleStore";
-import EditModule from "@/components/EditModule";
 
 export default function Home() {
   const [doctors, Setdoctors] = useState<any[]>([]);
@@ -96,7 +95,7 @@ export default function Home() {
                   </div>
                       </div>
                   <Edit size={20} className="cursor-pointer" onClick={()=>SetisEditModuleOpen(true)} />
-                  <EditModule isOpen={isEditModuleOpen} setIsOpen={SetisEditModuleOpen} Docname={data.name} Docspeciality={data.speciality} clinicName={data.clinic} id={data.id} image={data.imageUrl} phoneNumber={data.phone} />
+                 
                 </div>
               </div>
             ))
