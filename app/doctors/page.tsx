@@ -1,6 +1,6 @@
 "use client";
 
-import Form from "@/components/Form";
+// import Form from "@/components/Form";
 import { Button } from "@/components/ui/button";
 import { Edit, Loader2, Plus, Search, X } from "lucide-react";
 import {
@@ -122,7 +122,7 @@ export default function Home() {
             <DialogHeader>
               <DialogTitle></DialogTitle>
             </DialogHeader>
-            <Form />
+            {/* <Form /> */}
           </DialogContent>
         </Dialog>
       </div>
