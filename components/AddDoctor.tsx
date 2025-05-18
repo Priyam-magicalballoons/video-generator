@@ -154,7 +154,7 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
                     onChange={(e) => setTitle(e.target.value)}
                     readOnly
                   />
-                  <Input className="border-primary" id="name" value={name} onChange={(e)=>setName(e.target.value)} />
+                  <Input className="border-primary" id="name" value={name} onChange={(e)=>setName(e.target.value)} autoFocus />
                 </div>
               </div>
               <div className="flex items-start flex-col gap-2">
@@ -179,6 +179,7 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
                   ref={fileInputRef}
                   hidden
                   onChange={handleImageChange}
+                  
                 />
                 <div className="flex">
                   <Button
