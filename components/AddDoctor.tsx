@@ -30,7 +30,7 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Dr.");
   const [name, setName] = useState("");
   const [speciality, setSpeciality] = useState("");
   const [number, setNumber] = useState<string>();
@@ -147,16 +147,13 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
                   Add Doctor Name
                 </Label>
                 <div className="w-full flex gap-2 flex-row">
-                  <Select onValueChange={(e)=>setTitle(e)}>
-                    <SelectTrigger className="w-1/6 border-primary">
-                      <SelectValue placeholder="Dr." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Mr.">Mr.</SelectItem>
-                      <SelectItem value="Ms.">Ms.</SelectItem>
-                      <SelectItem value="Dr.">Dr.</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    className="border-primary w-14"
+                    id="name"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    readOnly
+                  />
                   <Input className="border-primary" id="name" value={name} onChange={(e)=>setName(e.target.value)} />
                 </div>
               </div>
