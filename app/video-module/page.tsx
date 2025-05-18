@@ -167,7 +167,7 @@ if (!uploadRes.ok) {
           <Label>Select Doctor</Label>
           <Select>
             <SelectTrigger className="w-full border-primary">
-              <SelectValue placeholder="Theme" />
+              <SelectValue placeholder="Select Doctor" />
             </SelectTrigger>
             <SelectContent>
               {
