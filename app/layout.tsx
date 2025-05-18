@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "I-Pledge Testing",
-  description: "World Hypertension Day encourages awareness, prevention, and personal commitment to managing high blood pressure for better health.",
+  title: "Vitiligo Awareness Month",
+  description: "Vitiligo Awareness Month promotes understanding, acceptance, and support for individuals affected by vitiligo through education and advocacy.",
 };
 
 export default function RootLayout({
