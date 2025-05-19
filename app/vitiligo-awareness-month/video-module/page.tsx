@@ -14,9 +14,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { toast } from "sonner";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { uploadFile } from "../actions/upload";
-import { addVideo } from "../actions/video.actions";
-import { getAllDoctors } from "../actions/doctor.actions";
+import { uploadFile } from "../../actions/upload";
+import { addVideo } from "../../actions/video.actions";
+import { getAllDoctors } from "../../actions/doctor.actions";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 

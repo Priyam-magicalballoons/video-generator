@@ -3,40 +3,31 @@ import prisma from "@/lib/prisma"
 
 export const getAllDoctorVideos = async ()=>{
   try {
-    const doctor = await prisma.doctor.findMany({
-    select : {
-        videoId : true,
-        name : true,
-        MR : {
-            select : {
-                name : true
-            }
-        },
-    }
-  })
-
-   const doctorWithVideos = await Promise.all(
-    doctor.map(async (doc) => {
-        console.log(doc)
-      const video = await prisma.video.findFirst({
-        where: {
-          id: doc.videoId!, 
-        },
-        select: {
-          refImageUrl: true,
-          refVideoUrl: true,
-          url: true,
-        },
-      });
-
-      return {
-        ...doc,
-        ...video,
-      };
+    const videos = await prisma.video.findMany({
+      select : {
+        docId : true,
+        refImageUrl : true,
+        refVideoUrl : true,
+        url : true,
+        id : true
+      }
     })
-  );
 
-  return doctorWithVideos
+    const doctorsWithVideos = await Promise.all(videos.map(async(video)=>{
+      const doctor = await prisma.doctor.findFirst({
+        where : {
+          id : video.docId!
+        },select : {
+          name : true,
+        }
+      })
+      return {
+        ...video,
+        doctor
+      }
+    }))
+
+    console.log(doctorsWithVideos)
   } catch (error) {
     console.log(error)
   }

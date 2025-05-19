@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import React, { useEffect, useState } from 'react'
-import { isAuthenticate } from '../actions/auth'
+import { isAuthenticate } from '../../actions/auth'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
@@ -26,7 +26,7 @@ const LoginPage = () => {
       toast("Logged In Successfully",{
         duration : 3000
       })
-      router.replace("/dashboard")
+      router.replace("/vitiligo-awareness-month/dashboard")
     }else{
       toast("Invalid Credentials",{
         duration : 3000

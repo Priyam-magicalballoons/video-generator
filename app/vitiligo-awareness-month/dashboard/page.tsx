@@ -15,7 +15,7 @@ const page = () => {
             <Card icon='/icons/i-pledge.png' text='I Pledge Module' onclick={()=>{}} />
             </div>
             <div className='border border-primary rounded-xl py-2 hover:bg-primary group cursor-pointer'>
-            <Card icon='/icons/video.png' text='Video Module' onclick={()=>{router.push("/video-module")}} />
+            <Card icon='/icons/video.png' text='Video Module' onclick={()=>{router.push("/vitiligo-awareness-month/video-module")}} />
 
             </div>
             <div className='border border-primary rounded-xl py-2 hover:bg-primary group'>

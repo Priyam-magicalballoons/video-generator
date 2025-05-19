@@ -7,7 +7,7 @@ const page = () => {
   const router = useRouter()
 
   useEffect(()=>{
-    router.push("/dashboard")
+    router.push("/vitiligo-awareness-month/dashboard")
     // seedFromExcel()
   },[])
   return (
