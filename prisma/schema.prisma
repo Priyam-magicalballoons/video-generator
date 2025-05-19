@@ -10,7 +10,6 @@ datasource db {
 model Mr {
   id        String   @id @default(uuid())
   name      String
-  number    String
   mid       String   @unique
   Hq        String
   createdAt DateTime @default(now())

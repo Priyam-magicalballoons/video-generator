@@ -61,6 +61,7 @@ const router = useRouter()
   method: 'PUT',
   headers: {
     'Content-Type': file.type,
+    'x-amz-acl': 'public-read'
   },
   body: file,
 });
@@ -73,8 +74,7 @@ if (!uploadRes.ok) {
        console.log(url.split('?')[0])
        setVideoUrl(url.split('?')[0])
 
-    // const data = await uploadFile(formData)
-    // setVideoUrl(data.url!)
+   
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -145,11 +145,21 @@ if (!uploadRes.ok) {
   };
 
   const handleSubmit =async ()=>{
+    
+    if(!imageUrl || !videoUrl || !docid){
+      toast("kindly provide all the data.")
+      return
+    }
+    try {
     setLoading(true)
-    const addToDb = await addVideo(imageUrl!,videoUrl,docid)
-        toast("video uploaded successfully")
-        router.push("/dashboard")
-
+    const addToDb = await addVideo(imageUrl,videoUrl,docid)
+    console.log(addToDb)
+    toast("video uploaded successfully")
+    router.push("/dashboard")
+    } catch (error) {
+      console.log(error)
+      toast("An error occured")
+    }
   }
 
   useEffect(()=>{
@@ -167,7 +177,7 @@ if (!uploadRes.ok) {
           <Label>Select Doctor</Label>
           <Select>
             <SelectTrigger className="w-full border-primary">
-              <SelectValue placeholder="Select Doctor" />
+              <SelectValue placeholder="Theme" />
             </SelectTrigger>
             <SelectContent>
               {
