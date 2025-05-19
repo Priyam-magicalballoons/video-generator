@@ -47,7 +47,7 @@ const LoginPage = () => {
       <Label htmlFor='password' className='text-[#9527DF]' >
       Password
         </Label>
-        <Input value={password} onChange={(e)=>setPassword(e.target.value)} id='password' className='border-[#9527DF]'  />
+        <Input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} id='password' className='border-[#9527DF]'  />
         </div>
         <div className='w-full flex items-center justify-center pt-10'>
         <Button onClick={authenticated} className='w-[80%] rounded-full'>Login</Button>

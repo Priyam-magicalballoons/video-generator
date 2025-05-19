@@ -8,6 +8,7 @@ const page = () => {
 
   useEffect(()=>{
     router.push("/dashboard")
+    // seedFromExcel()
   },[])
   return (
     <div>

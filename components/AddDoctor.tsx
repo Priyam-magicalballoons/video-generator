@@ -106,6 +106,10 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
         toast("kindly fill all the fields");
         return;
       }
+      if(number.length <10){
+        toast("kindly enter a valid phone number");
+        return;
+      }
       if (!imageUrl) {
         toast("kindly upload a image first");
         return;
@@ -128,6 +132,11 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
             position : "top-center"
           })
         }
+        setName("")
+        setImageUrl("")
+        setNumber("")
+        setPreviewUrl("")
+        setSpeciality("")
         setLoading(false);
         setIsOpen(false)
       } catch (error) {
@@ -161,7 +170,7 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
                 <Label htmlFor="mobile" className="text-gray-700">
                   Add Mobile Number / Doctor MSL Code
                 </Label>
-                <Input id="mobile" inputMode="numeric" maxLength={10} value=
+                <Input id="mobile" inputMode="numeric" maxLength={10} minLength={10} value=
                 {number} onChange={(e)=>setNumber(e.target.value)} className="border-primary" />
               </div>
               <div className="flex items-start flex-col gap-2">

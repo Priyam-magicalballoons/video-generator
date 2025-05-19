@@ -11,20 +11,32 @@ export async function seedFromExcel() {
   console.log(filePath)
 
   try {
-
-    console.log("working")
     const fileBuffer = await fs.readFile(filePath)
     const workbook = read(fileBuffer, { type: 'buffer' })
     const sheet = workbook.Sheets[workbook.SheetNames[0]]
     const json = utils.sheet_to_json(sheet)
 
-    const records = json.map((row: any) => ({
-      name: row.Names,
-      mid: String(row.EmpNo),
-      Hq : row.HQ,
-      desg : row.Desgn,
-      region : String(row.Region) 
-    }))
+    // const records = json.map((row: any) => ({
+    //   name: row.Names,
+    //   mid: String(row.EmpNo),
+    //   Hq : row.HQ,
+    //   desg : row.Desgn,
+    //   region : String(row.Region) 
+    // }))
+
+    const records = [{
+      name: "ASHWIN RATHOD",
+      mid: "97532",
+      Hq : "Surat",
+      desg : "SO",
+      region : "GUJ+RAJ" 
+    },{
+      name: "CHANDRASHEKHAR TUMBAGI",
+      mid: "97526",
+      Hq : "Hubli",
+      desg : "SO",
+      region : "KAR" 
+    }]
 
     const result = await prisma.mr.createMany({
       data: records,
