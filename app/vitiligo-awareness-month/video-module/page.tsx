@@ -159,7 +159,7 @@ if (!uploadRes.ok) {
     const addToDb = await addVideo(imageUrl,videoUrl,docid!)
     console.log(addToDb)
     toast("video uploaded successfully")
-    router.push("/dashboard")
+    router.push("/vitiligo-awareness-month/dashboard")
     } catch (error) {
       console.log(error)
       toast("An error occured")

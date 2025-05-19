@@ -27,7 +27,7 @@ export const getAllDoctorVideos = async ()=>{
       }
     }))
 
-    console.log(doctorsWithVideos)
+    return doctorsWithVideos
   } catch (error) {
     console.log(error)
   }

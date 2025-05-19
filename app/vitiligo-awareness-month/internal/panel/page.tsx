@@ -116,7 +116,6 @@ const page = () => {
 
         <thead>
           <th className="border">Doctor name</th>
-          <th className="border">Mr name</th>
           <th className="border">Image url</th>
           <th className="border">Video url</th>
           <th className="border">Upload Video</th>
@@ -124,8 +123,7 @@ const page = () => {
         <tbody>
           {allData?.map((item) => (
               <tr>
-              <td className="border">{item.name}</td>
-              <td className="border">{item.MR.name}</td>
+              <td className="border">{item.doctor.name}</td>
               <td className="border max-w-[200px] truncate cursor-pointer text-blue-500"><p onClick={()=>handleDownload(item.refImageUrl,`${item.name}-image`)}>
                 {item.refImageUrl} 
                 </p>
@@ -136,7 +134,7 @@ const page = () => {
                 </td>
                 <td className="flex justify-center border">
                     {
-                        item.url ? <a className="text-blue-500 max-w-[200px] truncate" href={item.url}>{item.url}</a> : <><input onChange={(e)=>{uploadVideo(e,item.videoId)}} type="file" accept="video/*" ref={videoInputRef} hidden />
+                        item.url ? <a className="text-blue-500 max-w-[200px] truncate" href={item.url}>{item.url}</a> : <><input onChange={(e)=>{uploadVideo(e,item.id)}} type="file" accept="video/*" ref={videoInputRef} hidden />
                     <Button onClick={handleButtonClick} type="button" >{uploading ? <div className="flex items-center gap-2"><Loader2 className="animate-spin" /><p>Uploading</p></div> : "Upload Video" }</Button></>
                     }
                 </td>
