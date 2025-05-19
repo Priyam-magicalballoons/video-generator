@@ -17,8 +17,6 @@ export const addDoctor = async (name : string,number:string,imageUrl : string, s
           speciality : true,
         }
       })
-
-      console.log(create)
       return {
         status : 200,
         data : create

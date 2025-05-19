@@ -15,8 +15,13 @@ const LoginPage = () => {
   const router = useRouter()
 
   const authenticated = async ()=>{
+    if(username !== password){
+      toast("Invalid Credentials",{
+        duration : 3000
+      })
+      return
+    }
     const data = await isAuthenticate(username,password)
-    console.log(data)
     if(data.status === 200){
       toast("Logged In Successfully",{
         duration : 3000

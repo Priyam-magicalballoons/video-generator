@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
+import { seedFromExcel } from './actions/seed'
 
 const page = () => {
   const router = useRouter()

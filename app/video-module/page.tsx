@@ -3,19 +3,22 @@
 import { Label } from "@/components/ui/label";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { toast } from "sonner";
-import { Loader2, X } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { uploadFile } from "../actions/upload";
 import { addVideo } from "../actions/video.actions";
 import { getAllDoctors } from "../actions/doctor.actions";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const page = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -29,6 +32,9 @@ const page = () => {
   const [loading, setLoading] = useState(false)
   const [docid, setDocid] = useState("")
   const [allDoctors, setAllDoctors] = useState<any[]>([])
+  const [open, setOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState<string | null>("Select Doctor")
+
 const router = useRouter()
   const handleVideoClick = () => {
     videoInputRef.current?.click();
@@ -73,8 +79,6 @@ if (!uploadRes.ok) {
 }
        console.log(url.split('?')[0])
        setVideoUrl(url.split('?')[0])
-
-   
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -152,7 +156,7 @@ if (!uploadRes.ok) {
     }
     try {
     setLoading(true)
-    const addToDb = await addVideo(imageUrl,videoUrl,docid)
+    const addToDb = await addVideo(imageUrl,videoUrl,docid!)
     console.log(addToDb)
     toast("video uploaded successfully")
     router.push("/dashboard")
@@ -173,20 +177,50 @@ if (!uploadRes.ok) {
   return (
     <div className=" flex items-center w-full py-10 justify-center">
       <div className="w-[90%] flex flex-col gap-8">
-        <div>
-          <Label>Select Doctor</Label>
-          <Select>
-            <SelectTrigger className="w-full border-primary">
-              <SelectValue placeholder="Theme" />
-            </SelectTrigger>
-            <SelectContent>
-              {
-                allDoctors.map((item,index)=>(
-                    <SelectItem onClick={()=>setDocid(item.id)} value={item.name}>{item.name}</SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-2 w-full">
+           <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {selectedValue}
+          <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-full p-0">
+        <Command className="w-full">
+          <CommandInput placeholder="Search doctor..." className="h-9 w-full" />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {allDoctors.map((option) => (
+                <CommandItem
+                  key={option.name}
+                  value={option.name}
+                  onSelect={(currentValue) => {
+                    setSelectedValue(currentValue === selectedValue ? "Select Doctor" : currentValue)
+                    setOpen(false)
+                    setDocid(option.id)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      'mr-2 h-4 w-4',
+                      selectedValue === option.name ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                  {option.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
         </div>
         <div className="flex flex-col items-start gap-2">
           <Label className="text-lg text-gray-700">Upload Image</Label>
@@ -245,7 +279,9 @@ if (!uploadRes.ok) {
 
         {/* Video upload and preview */}
         <div className="flex flex-col items-start gap-2">
-          <Label className="text-lg text-gray-700">Video Image</Label>
+          <Label className="text-lg text-gray-700">Upload 
+            Video
+          </Label>
           <input
             type="file"
             accept="video/*"

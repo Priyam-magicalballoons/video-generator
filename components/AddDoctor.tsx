@@ -161,7 +161,7 @@ const AddDoctor = ({ isOpen, setIsOpen }: AddDoctorModule) => {
                 <Label htmlFor="mobile" className="text-gray-700">
                   Add Mobile Number / Doctor MSL Code
                 </Label>
-                <Input id="mobile" value=
+                <Input id="mobile" inputMode="numeric" maxLength={10} value=
                 {number} onChange={(e)=>setNumber(e.target.value)} className="border-primary" />
               </div>
               <div className="flex items-start flex-col gap-2">

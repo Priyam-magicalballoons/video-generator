@@ -12,6 +12,8 @@ model Mr {
   name      String
   mid       String   @unique
   Hq        String
+  desg      String
+  region    String
   createdAt DateTime @default(now())
   Doctors   Doctor[]
 }
