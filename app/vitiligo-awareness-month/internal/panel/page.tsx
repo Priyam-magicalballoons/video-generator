@@ -123,16 +123,16 @@ const page = () => {
         <tbody>
           {allData?.map((item) => (
               <tr>
-              <td className="border">{item.doctor.name}</td>
-              <td className="border max-w-[200px] truncate cursor-pointer text-blue-500"><p onClick={()=>handleDownload(item.refImageUrl,`${item.name}-image`)}>
+              <td className="border px-5">{item.doctor.name}</td>
+              <td className="border max-w-[200px] truncate cursor-pointer text-blue-500 px-5"><p onClick={()=>handleDownload(item.refImageUrl,`${item.name}-image`)}>
                 {item.refImageUrl} 
                 </p>
                 </td>
-              <td className="border max-w-[200px] truncate cursor-pointer text-blue-500"><p onClick={()=>handleDownload(item.refVideoUrl,`${item.name}-video`)}>
+              <td className="border max-w-[200px] truncate cursor-pointer text-blue-500 px-5"><p onClick={()=>handleDownload(item.refVideoUrl,`${item.name}-video`)}>
                 {item.refVideoUrl}
                 </p>
                 </td>
-                <td className="flex justify-center border">
+                <td className="flex justify-center border px-5">
                     {
                         item.url ? <a className="text-blue-500 max-w-[200px] truncate" href={item.url}>{item.url}</a> : <><input onChange={(e)=>{uploadVideo(e,item.id)}} type="file" accept="video/*" ref={videoInputRef} hidden />
                     <Button onClick={handleButtonClick} type="button" >{uploading ? <div className="flex items-center gap-2"><Loader2 className="animate-spin" /><p>Uploading</p></div> : "Upload Video" }</Button></>
