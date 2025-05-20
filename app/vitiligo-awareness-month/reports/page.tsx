@@ -90,8 +90,8 @@ const Page = () => {
           </Popover>
         </div>
         <div className="flex flex-col w-full gap-5">
-            <div className="bg-[#EDDAF1] py-2 px-3">
-                <p>
+            <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
+                <p className="font-semibold pb-3">
                     Video
                 </p>
                 <div className="px-5 flex">
@@ -99,28 +99,57 @@ const Page = () => {
                     <img src="/icons/video-report.png" alt="" height={100} width={100} />
                     </div>
                     <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
-                        <Button variant={"ghost"} className="flex gap-2">
+                        <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
                         <p>Uploaded</p>
                         <SquareCheckBig color="green"/>
                         </Button>
-                        <Button variant={"ghost"} className="flex gap-2">
+                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
                         <p>Download</p>
                         <ArrowDown color="red" />
                         </Button>
                     </div>
                 </div>
             </div>
-            <div className="bg-[#EDDAF1] py-2 px-3">
-                <p>
-                    I-Pledge
+            <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
+                <p className="font-semibold pb-3">
+                    I Pledge
                 </p>
+                <div className="px-5 flex">
+                    <div className="w-1/2">
+                    <img src="/icons/i-pledge-report.png" alt="" height={80} width={90} />
+                    </div>
+                    <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
+                        <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
+                        <p>Uploaded</p>
+                        <SquareCheckBig color="green"/>
+                        </Button>
+                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
+                        <p>Download</p>
+                        <ArrowDown color="red" />
+                        </Button>
+                    </div>
+                </div>
             </div>
-            <div className="bg-[#EDDAF1] py-2 px-3">
-                <p>
+            <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
+                <p className="font-semibold pb-3">
                     Poster
                 </p>
-            </div>
-            
+                <div className="px-5 flex">
+                    <div className="w-1/2 ">
+                    <img src="/icons/poster-report.png" alt="" height={90} width={90}  />
+                    </div>
+                    <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
+                        <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
+                        <p>Uploaded</p>
+                        <SquareCheckBig color="green"/>
+                        </Button>
+                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
+                        <p>Download</p> 
+                        <ArrowDown color="red" />
+                        </Button>
+                    </div>
+                </div>
+            </div>            
         </div>
       </div>
     </div>
