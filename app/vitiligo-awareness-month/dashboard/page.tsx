@@ -36,7 +36,7 @@ const page = () => {
         </div>
         <div className='flex justify-end items-end w-full pr-5 pb-5'>
             <Button variant={"ghost"} onClick={()=>setIsOpen(true)}>
-            <img src="/icons/add-icon.png" alt="add-icon" height={50} width={50} />
+            <img src="/icons/add-icon.png" alt="add-icon" height={40} width={40} />
             </Button>
         </div>
         <AddDoctor isOpen={isOpen} setIsOpen={setIsOpen} />
