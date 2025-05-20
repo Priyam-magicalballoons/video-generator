@@ -24,13 +24,10 @@ const page = () => {
   }
 
   const handleDownload = async (file:string,filename : string) => {
-
     try {
       const res = await fetch(file)
       const contentType = res.headers.get("content-type") || ""
       if (!res.ok) throw new Error("Failed to fetch file")
-
-
        const extensionMap: Record<string, string> = {
         "image/jpeg": ".jpg",
         "image/png": ".png",

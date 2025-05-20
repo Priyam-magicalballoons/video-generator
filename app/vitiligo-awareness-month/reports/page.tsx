@@ -1,6 +1,7 @@
 "use client";
 
-import { getAllDoctors } from "@/app/actions/doctor.actions";
+import { getAllDoctors, getSingleDetails } from "@/app/actions/doctor.actions";
+import { checkIsUploaded } from "@/app/actions/other.actions";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,14 +17,54 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { ArrowDown, Check, ChevronsUpDown, SquareCheckBig } from "lucide-react";
+import { ArrowDown, Check, ChevronsUpDown, CircleX, SquareCheckBig } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const [docid, setDocid] = useState("");
+  const [docName, setDocName] = useState("")
   const [allDoctors, setAllDoctors] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>("Select Doctor");
+  const [selectDocDetails, setSelectDocDetails] = useState<any>({
+    video : {},
+    poster : {},
+    ipledge : {}
+  })
+  const [loading, setLoading] = useState(false)
+
+  const handleDownload = async (file:string,filename : string) => {
+    try {
+      const res = await fetch(file)
+      const contentType = res.headers.get("content-type") || ""
+      if (!res.ok) throw new Error("Failed to fetch file")
+       const extensionMap: Record<string, string> = {
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "image/webp": ".webp",
+        "image/gif": ".gif",
+        "image/bmp": ".bmp",
+        "image/tiff": ".tiff",
+        "image/svg+xml": ".svg",
+        "image/x-icon": ".ico",
+        "video/mp4": ".mp4",
+        "application/pdf": ".pdf",
+      }
+
+      const extension = extensionMap[contentType] || ""
+      const blob = await res.blob()
+      const downloadUrl = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = downloadUrl
+      a.download = `${filename}${extension}`
+      a.click()
+
+      URL.revokeObjectURL(downloadUrl)
+    } catch (err) {
+      console.error(err)
+      alert("Download failed.")
+    }
+  }
 
   useEffect(() => {
     const getDoctors = async () => {
@@ -32,9 +73,20 @@ const Page = () => {
     };
     getDoctors();
   }, []);
+
+  useEffect(()=>{
+    setLoading(true)
+    const getIsUploaded = async () => {
+      const uploadedData = await checkIsUploaded(docid)
+      setSelectDocDetails(uploadedData.data)
+      setLoading(false)
+    }
+    getIsUploaded()
+  },[docid])
+
   return (
     <div className="w-full h-screen flex justify-center py-5 gap-5">
-      <div className="w-[90%]  h-full flex flex-col gap-5">
+      <div className="w-[90%] pb-5 h-fit md:w-96 lg:w-1/4 border-gray-100 sm:shadow-lg rounded-lg border-1 sm:border  md:border md:border-1 p-2 flex flex-col gap-5 py-5">
         <div className="flex flex-col gap-2 w-full">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -48,7 +100,6 @@ const Page = () => {
                 <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
               </Button>
             </PopoverTrigger>
-
             <PopoverContent className="w-full p-0">
               <Command className="w-full">
                 <CommandInput
@@ -70,6 +121,7 @@ const Page = () => {
                           );
                           setOpen(false);
                           setDocid(option.id);
+                          setDocName(option.name)
                         }}
                       >
                         <Check
@@ -89,6 +141,8 @@ const Page = () => {
             </PopoverContent>
           </Popover>
         </div>
+        {
+          (docid && !loading) && (
         <div className="flex flex-col w-full gap-5">
             <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
                 <p className="font-semibold pb-3">
@@ -101,12 +155,18 @@ const Page = () => {
                     <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
                         <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
                         <p>Uploaded</p>
-                        <SquareCheckBig color="green"/>
-                        </Button>
-                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
+                        {
+                          selectDocDetails?.video?.refVideoUrl ?  <SquareCheckBig color="green"/> : <CircleX color="red" />
+                        }
+                          </Button>
+                        {
+                          selectDocDetails?.video?.url ? (
+                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownload(selectDocDetails?.video?.url,`${docName}-video`)}>
                         <p>Download</p>
                         <ArrowDown color="red" />
                         </Button>
+                        ) : <p>{""}</p>
+                        }
                     </div>
                 </div>
             </div>
@@ -121,18 +181,25 @@ const Page = () => {
                     <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
                         <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
                         <p>Uploaded</p>
-                        <SquareCheckBig color="green"/>
+                        {
+                          selectDocDetails?.ipledge?.url ?  <SquareCheckBig color="green"/> : <CircleX color="red"/>
+                        }
                         </Button>
-                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
+                        {
+                          selectDocDetails?.ipledge?.url ? (
+
+                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownload(selectDocDetails?.ipledge?.url,`${docName}-i-pledge`)}>
                         <p>Download</p>
                         <ArrowDown color="red" />
                         </Button>
+                        ) : <p>{""}</p>
+                      }
                     </div>
                 </div>
             </div>
             <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
                 <p className="font-semibold pb-3">
-                    Poster
+                    Poster -1
                 </p>
                 <div className="px-5 flex">
                     <div className="w-1/2 ">
@@ -141,16 +208,52 @@ const Page = () => {
                     <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
                         <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
                         <p>Uploaded</p>
-                        <SquareCheckBig color="green"/>
+                        {
+                          selectDocDetails?.poster?.url_1 ?  <SquareCheckBig color="green"/> : <CircleX color="red"/>
+                        }
                         </Button>
-                        <Button variant={"ghost"} className="flex gap-2 w-fit self-center">
-                        <p>Download</p> 
+                        {
+                          selectDocDetails?.poster?.url_1 ? (
+
+                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownload(selectDocDetails?.poster?.url_1,`${docName}-poster-1`)}>
+                        <p>Download</p>
                         <ArrowDown color="red" />
                         </Button>
+                        ) : <p>{""}</p>
+                      }
+                    </div>
+                </div>
+            </div>            
+            <div className="bg-[#EDDAF1] py-2 px-3 w-full rounded-sm">
+                <p className="font-semibold pb-3">
+                    Poster - 2
+                </p>
+                <div className="px-5 flex">
+                    <div className="w-1/2 ">
+                    <img src="/icons/poster-report.png" alt="" height={90} width={90}  />
+                    </div>
+                    <div className="flex justify-around w-1/2 flex-col pl-5 pb-2">
+                        <Button variant={"ghost"} className="flex gap-2 hover:bg-transparent cursor-default">
+                        <p>Uploaded</p>
+                        {
+                          selectDocDetails?.poster?.url_2 ?  <SquareCheckBig color="green"/> : <CircleX color="red"/>
+                        }
+                        </Button>
+                        {
+                          selectDocDetails?.poster?.url_2 ? (
+
+                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownload(selectDocDetails?.poster?.url_2,`${docName}-poster-2`)}>
+                        <p>Download</p>
+                        <ArrowDown color="red" />
+                        </Button>
+                        ) : <p>{""}</p>
+                      }
                     </div>
                 </div>
             </div>            
         </div>
+         )
+        }
       </div>
     </div>
   );

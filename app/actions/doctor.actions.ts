@@ -72,5 +72,34 @@ export const editDoctor = async (name : string,number:string,imageUrl : string, 
       status : 400,
     }
   }
+}
 
+export const getSingleDetails = async (docId:string)=> {
+  try {
+    const detail = await prisma.doctor.findUnique({
+    where : {
+      id : docId
+    },select :{
+      ipledgeId : true,
+      posterId : true,
+      videoId : true
+    }
+  })
+
+  if(detail){
+    return {
+    status : 200,
+    data : detail
+  }
+  }else{
+    return {
+      status : 400
+    }
+  }
+  } catch (error) {
+    console.log(error)
+    return {
+      status : 400,
+    }
+  }
 }

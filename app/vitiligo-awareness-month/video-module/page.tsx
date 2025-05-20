@@ -175,8 +175,8 @@ if (!uploadRes.ok) {
     getDoctors()
   },[])
   return (
-    <div className=" flex items-center w-full py-10 justify-center">
-      <div className="w-[90%] flex flex-col gap-8">
+    <div className="flex items-center w-full py-10 justify-center">
+      <div className="w-[80%] pb-5 h-fit md:w-96 lg:w-1/4 border-gray-100 sm:shadow-lg rounded-lg border-1 sm:border md:border md:border-1 p-2 gap-8 flex flex-col py-5 border-t-0">
         <div className="flex flex-col gap-2 w-full">
            <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

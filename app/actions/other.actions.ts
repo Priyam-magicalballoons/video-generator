@@ -55,3 +55,55 @@ export const getAllDoctorVideos = async ()=>{
       console.log(error)
     }
   }
+
+  export const checkIsUploaded = async (docId : string)=>{
+    try {
+      const isVideoUploaded = prisma.video.findFirst({
+      where : {
+        docId 
+      },select : {
+        refVideoUrl : true,
+        url : true
+      }
+    })
+
+    const isPosterUploaded = prisma.poster.findFirst({
+      where : {
+        docId
+      },select : {
+        url_1 : true,
+        url_2 : true
+      }
+    })
+
+    const isIpledgeUploaded = prisma.iPledge.findFirst({
+      where : {
+        docId
+      },select : {
+        url : true
+      }
+    })
+
+    const isUploaded = await prisma.$transaction([isVideoUploaded,isIpledgeUploaded,isPosterUploaded])
+
+    if(isUploaded){
+      return {
+        status : 200,
+        data : {
+          video : isUploaded[0],
+          poster : isUploaded[2],
+          ipledge : isUploaded[1]
+        }
+      }
+    }else{
+      return {
+        status : 200
+      }
+    }
+    } catch (error) {
+      console.log(error)
+       return {
+        status : 200
+      }
+    }
+  }

@@ -36,7 +36,7 @@ const LoginPage = () => {
 
   return (
     <div className='w-full flex justify-center items-center h-screen'>
-      <div className='flex flex-col gap-5 w-[80%]'>
+      <div className='w-[90%] pb-5 h-fit md:w-96 lg:w-1/4 border-gray-100 sm:shadow-lg rounded-lg border-1 sm:border  md:border md:border-1 p-2 flex flex-col gap-5 py-10'>
         <div className='flex flex-col gap-2'>
       <Label htmlFor='username' className='text-[#9527DF]'>
       Username
