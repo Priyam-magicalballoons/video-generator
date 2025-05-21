@@ -26,11 +26,7 @@ const Page = () => {
   const [allDoctors, setAllDoctors] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>("Select Doctor");
-  const [selectDocDetails, setSelectDocDetails] = useState<any>({
-    video : {},
-    poster : {},
-    ipledge : {}
-  })
+  const [selectDocDetails, setSelectDocDetails] = useState<any>()
   const [loading, setLoading] = useState(false)
 
   const handleDownload = async (file:string,filename : string) => {
