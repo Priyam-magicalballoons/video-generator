@@ -29,7 +29,7 @@ export const addDoctor = async (name : string,number:string,imageUrl : string, s
     }
 }
 
-export const getAllDoctors = async ()=>{
+export const getAllDoctors = async (type:string = "")=>{
   const mrId = cookies().get("user")?.value as string
   const retrieve = await prisma.doctor.findMany({
     where : {
@@ -40,8 +40,32 @@ export const getAllDoctors = async ()=>{
       speciality : true,
       number : true,
       id : true,
+      videoId : true,
+      ipledgeId : true,
+      posterId : true
     }
   })
+
+
+  if(type === "poster"){
+    const posterUrls = await Promise.all(retrieve.map(async(doc)=>{
+      const url = await prisma.poster.findFirst({
+        where : {
+          docId : doc.id
+        },select : {
+          url_1 : true,
+          url_2 : true
+        }
+      })
+
+      return {
+        ...doc,
+        url
+      }
+    }))
+
+    return posterUrls
+  }
 
   return retrieve
 }

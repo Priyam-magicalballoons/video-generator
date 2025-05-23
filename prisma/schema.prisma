@@ -43,8 +43,8 @@ model Video {
 
 model Poster {
   id     String  @id @default(uuid())
-  url_1    String
-  url_2    String
+  url_1  String?
+  url_2  String?
   docId  String?
 }
 

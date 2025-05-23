@@ -25,17 +25,17 @@ export async function seedFromExcel() {
     // }))
 
     const records = [{
-      name: "ASHWIN RATHOD",
-      mid: "97532",
-      Hq : "Surat",
+      name: "RAJBIR SINGH",
+      mid: "11111",
+      Hq : "Amritsar",
       desg : "SO",
-      region : "GUJ+RAJ" 
+      region : "PJB" 
     },{
-      name: "CHANDRASHEKHAR TUMBAGI",
-      mid: "97526",
-      Hq : "Hubli",
+      name: "SURAJ KUMAR THAKUR",
+      mid: "22222",
+      Hq : "Purnea",
       desg : "SO",
-      region : "KAR" 
+      region : "ASSAM" 
     }]
 
     const result = await prisma.mr.createMany({

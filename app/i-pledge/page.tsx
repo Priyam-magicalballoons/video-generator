@@ -186,7 +186,7 @@ const IPledge = () => {
           {isCapturing && (
             <div className="relative w-full max-w-[600px]" ref={imageRef}>
               <img
-                src="/poster.png"
+                src="/I-pledge.png"
                 alt="Poster"
                 className="w-full h-auto block"
               />

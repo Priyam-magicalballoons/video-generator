@@ -170,10 +170,12 @@ if (!uploadRes.ok) {
     const getDoctors = async()=> 
     {
         const data = await getAllDoctors()
-        setAllDoctors(data)
+        const filteredDocs = data.filter((d)=>d.videoId === null)
+        setAllDoctors(filteredDocs)
     }
     getDoctors()
   },[])
+
   return (
     <div className="flex items-center w-full py-10 justify-center">
       <div className="w-[80%] pb-5 h-fit md:w-96 lg:w-1/4 border-gray-100 sm:shadow-lg rounded-lg border-1 sm:border md:border md:border-1 p-2 gap-8 flex flex-col py-5 border-t-0">

@@ -251,7 +251,7 @@ const Page = () => {
                             ? item?.url_1
                             : item?.url
                         }`,
-                        `${item?.doctor.name}-image`
+                        `${item?.doctor.name}-${report === "video" ? "image" : report === "poster" ? "poster_1" : "i-pledge"}`
                       )
                     }
                   >
@@ -277,7 +277,7 @@ const Page = () => {
                             ? item?.url_2
                             : ""
                         }`,
-                        `${item?.doctor.name}-video`
+                        `${item?.doctor.name}-${report === "video" ? "video" : report === "poster" ? "poster_2" : "i-pledge"}`
                       )
                     }
                   >
@@ -294,7 +294,6 @@ const Page = () => {
                       className="text-blue-600 max-w-[200px] truncate flex"
                       href={item.url}
                       target="_blank"
-                      rel="noopener noreferrer"
                     >
                       {item.url}
                     </a>
