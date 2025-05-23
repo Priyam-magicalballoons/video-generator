@@ -335,7 +335,7 @@ const router = useRouter()
               className="absolute w-full text-center"
               style={{ top: 325 }}
             >
-              <p className="text-[#75477c] font-bold text-xl">{docData?.name}</p>
+              <p className="text-[#613e92] font-bold text-xl">{docData?.name}</p>
             </div>
           </div>
 
