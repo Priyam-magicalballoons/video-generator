@@ -38,6 +38,7 @@ const Page = () => {
   const getAllIPledgeData = async ()=> {
     setLoading(true)
     const data = await getAllDoctorIpledges();
+    console.log(data)
     setAllData(data || []);
     setLoading(false)
   }
@@ -159,7 +160,8 @@ const Page = () => {
     }else if(report === "poster"){
       getAllPosterData()
     }else if(report === "i-pledge"){
-      getAllIPledgeData()
+       getAllIPledgeData()
+      
     }
   }, [report]);
 

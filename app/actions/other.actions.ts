@@ -89,7 +89,7 @@ export const getAllDoctorPosters = async () => {
 
     const docWithPosterWithMr = await Promise.all(
       doctorsWithVideos.map(async(doc)=>{
-        const mr = await prisma.mr.findUnique({
+        const mr = await prisma.mr.findFirst({
           where : {
             id : doc.doctor?.mrId
           },select : {
@@ -123,6 +123,7 @@ export const getAllDoctorIpledges = async () => {
         id: true,
       },
     });
+
 
     const doctorsWithIpledges = await Promise.all(
       ipledges.map(async (ipledge) => {

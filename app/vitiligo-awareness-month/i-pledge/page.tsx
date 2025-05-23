@@ -123,13 +123,14 @@ const router = useRouter()
     // Download the image
     const link = document.createElement("a");
     link.href = dataUrl;
-    link.download = "i-pledge.png";
+    const timestamps = new Date();
+    link.download = `${timestamps}-${docData}-i-pledge.png`
     link.click();
 
     // Convert to file for upload
     const response = await fetch(dataUrl);
     const blob = await response.blob();
-    const file = new File([blob], "i-pledge.png", { type: blob.type });
+    const file = new File([blob], `${timestamps}-${docData}-i-pledge.png`, { type: blob.type });
 
     try {
       const formData = new FormData();
