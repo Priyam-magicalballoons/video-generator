@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toPng } from "html-to-image";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -38,7 +39,7 @@ const Page = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-
+const router = useRouter()
   // Fetch doctors
   useEffect(() => {
     const getDoctors = async () => {
@@ -152,10 +153,11 @@ const Page = () => {
       if (url) {
         const saveToDb = await saveIpledge(docData.id, url.split('?')[0])
         if(saveToDb.status === 200){
-          return toast("I-pledge Saved Successfully")
+          toast("I-pledge Saved Successfully")
         } else {
           toast("Error in saving i-pledge")
         }
+        router.push("/vitiligo-awareness-month/dashboard")
       }
     } catch (error) {
       toast("Error in saving i-pledge")
@@ -290,8 +292,8 @@ const Page = () => {
             <div
               className="absolute"
               style={{
-                top: 86,
-                left: 108,
+                top: 88,
+                left: 110,
                 width: 180,
                 height: 180,
                 borderRadius: "50%",
@@ -331,9 +333,9 @@ const Page = () => {
             {/* Doctor name */}
             <div
               className="absolute w-full text-center"
-              style={{ top: 305 }}
+              style={{ top: 325 }}
             >
-              <p className="text-[#75477c] font-semibold">{docData?.name}</p>
+              <p className="text-[#75477c] font-bold text-xl">{docData?.name}</p>
             </div>
           </div>
 
