@@ -293,8 +293,8 @@ const router = useRouter()
             <div
               className="absolute"
               style={{
-                top: 88,
-                left: 110,
+                top: 89,
+                left: 111,
                 width: 180,
                 height: 180,
                 borderRadius: "50%",
