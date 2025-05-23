@@ -32,7 +32,9 @@ const Page = () => {
   const [image, setImage] = useState<string | null>(null);
   const [isCapturing, setIsCapturing] = useState(true);
 
-  const imageRef = useRef<HTMLDivElement | null>(null);
+  // Create separate refs for the full component and just the image part
+  const fullComponentRef = useRef<HTMLDivElement | null>(null);
+  const imageOnlyRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -110,34 +112,48 @@ const Page = () => {
     setIsCapturing(false);
   };
 
-  // Download the I-pledge image
+  // Download only the I-pledge image with camera photo
   const handleDownload = async () => {
-    if (!imageRef.current) return;
-    const dataUrl = await toPng(imageRef.current);
+    if (!imageOnlyRef.current) return;
+    
+    // Use html-to-image to capture only the image part (without buttons)
+    const dataUrl = await toPng(imageOnlyRef.current);
+    
+    // Download the image
     const link = document.createElement("a");
     link.href = dataUrl;
     link.download = "i-pledge.png";
     link.click();
 
-     const response = await fetch(dataUrl);
+    // Convert to file for upload
+    const response = await fetch(dataUrl);
     const blob = await response.blob();
-    const file = new File([blob], "i-pledge.png", { type: blob.type })
+    const file = new File([blob], "i-pledge.png", { type: blob.type });
 
     try {
-       const formData = new FormData();
+      const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
+      const { url } = await res.json();
+      const uploadRes = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+          'x-amz-acl': 'public-read'
+        },
+        body: file,
       });
-
-      const data = await res.json();
-      if (data.url) {
-        const saveToDb = await saveIpledge(docData.id,data.url)
+      
+      if (!uploadRes.ok) {
+        toast("Upload failed. Please try again.");
+        return;
+      }
+      if (url) {
+        const saveToDb = await saveIpledge(docData.id, url.split('?')[0])
         if(saveToDb.status === 200){
-          return toast("I-pldge Saved Successfully")
-        }else {
+          return toast("I-pledge Saved Successfully")
+        } else {
           toast("Error in saving i-pledge")
         }
       }
@@ -255,68 +271,74 @@ const Page = () => {
           </div>
         </div>
       ) : (
-        // I-Pledge Card with Camera
-        <div className="relative mx-auto mt-10" ref={imageRef} style={{ width: 400 }}>
-          {/* I-pledge template */}
-          <img
-            src="/I-pledge.png"
-            alt="template"
-            className="block w-full"
-            style={{ maxWidth: 400 }}
-          />
-
-          {/* Camera or Captured Image in the circle */}
-          <div
-            className="absolute"
-            style={{
-              top: 86,
-              left: 108,
-              width: 180,
-              height: 180,
-              borderRadius: "50%",
-              overflow: "hidden",
-              background: "#eee",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+        <div ref={fullComponentRef} className="flex flex-col items-center">
+          {/* I-Pledge Card with Camera - This div contains ONLY the image parts */}
+          <div 
+            ref={imageOnlyRef} 
+            className="relative mx-auto" 
+            style={{ width: 400 }}
           >
-            {isCapturing && (
-              <video
-                ref={videoRef}
-                autoPlay
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  background: "#eee",
-                }}
-              />
-            )}
-            {!isCapturing && image && (
-              <img
-                src={image}
-                alt="Captured"
-                className="w-full h-full object-cover"
-                style={{ borderRadius: "50%" }}
-              />
-            )}
+            {/* I-pledge template */}
+            <img
+              src="/I-pledge.png"
+              alt="template"
+              className="block w-full"
+              style={{ maxWidth: 400 }}
+            />
+
+            {/* Camera or Captured Image in the circle */}
+            <div
+              className="absolute"
+              style={{
+                top: 86,
+                left: 108,
+                width: 180,
+                height: 180,
+                borderRadius: "50%",
+                overflow: "hidden",
+                background: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {isCapturing && (
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    background: "#eee",
+                  }}
+                />
+              )}
+              {!isCapturing && image && (
+                <img
+                  src={image}
+                  alt="Captured"
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: "50%" }}
+                />
+              )}
+            </div>
+
+            {/* Doctor name */}
+            <div
+              className="absolute w-full text-center"
+              style={{ top: 305 }}
+            >
+              <p className="text-[#75477c] font-semibold">{docData?.name}</p>
+            </div>
           </div>
 
-          {/* Doctor name */}
-          <div
-            className="absolute w-full text-center"
-            style={{ top: 305 }}
-          >
-            <p className="text-[#75477c] font-semibold">{docData?.name}</p>
-          </div>
-
-          {/* Capture, Retake, Download Buttons */}
-          <div className="w-full flex flex-col items-center mt-6">
+          {/* Buttons - Outside the imageOnlyRef so they won't be included in the download */}
+          <div className="w-full flex flex-col items-center mt-6" style={{ maxWidth: 400 }}>
             {isCapturing && (
               <Button
                 onClick={captureImage}
