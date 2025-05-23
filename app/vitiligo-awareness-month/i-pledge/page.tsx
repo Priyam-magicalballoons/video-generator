@@ -119,9 +119,13 @@ const Page = () => {
     link.download = "i-pledge.png";
     link.click();
 
+     const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    const file = new File([blob], "i-pledge.png", { type: blob.type })
+
     try {
        const formData = new FormData();
-      formData.append("file", dataUrl);
+      formData.append("file", file);
 
       const res = await fetch("/api/upload", {
         method: "POST",
