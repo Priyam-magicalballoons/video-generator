@@ -301,14 +301,53 @@ const Page = () => {
                   }}
                 />
               )}
-              {!isCapturing && image && (
-                <img
-                  src={image}
-                  alt="Captured"
-                  className="w-full h-full object-cover"
-                  style={{ borderRadius: "50%" }}
-                />
+             {!isCapturing && image && (
+               <div
+  style={{
+    position: "relative",
+    width: "200px",
+    height: "200px",
+    borderRadius: "50%",
+    overflow: "hidden",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  {/* Blurred background */}
+  <img
+    src={image}
+    alt="Blurred Background"
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+      filter: "blur(12px)",
+      transform: "scale(1.2)", // slight zoom to hide edges
+      zIndex: 1,
+    }}
+  />
+
+  {/* Main Circular Image */}
+  <img
+    src={image}
+    alt="Profile"
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+      objectPosition: "center",
+      borderRadius: "50%",
+      zIndex: 2,
+    }}
+  />
+</div>
+
               )}
+
             </div>
             <div className="absolute w-full text-center" style={{ top: 325 }}>
               <p className="text-[#613e92] font-bold text-xl">{docData?.name}</p>
