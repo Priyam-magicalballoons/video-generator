@@ -33,14 +33,13 @@ const Page = () => {
   const [image, setImage] = useState<string | null>(null);
   const [isCapturing, setIsCapturing] = useState(true);
 
-  // Create separate refs for the full component and just the image part
   const fullComponentRef = useRef<HTMLDivElement | null>(null);
   const imageOnlyRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-const router = useRouter()
-  // Fetch doctors
+  const router = useRouter();
+
   useEffect(() => {
     const getDoctors = async () => {
       const data = await getAllDoctors();
@@ -50,7 +49,6 @@ const router = useRouter()
     getDoctors();
   }, []);
 
-  // Camera logic: open when showIpledge is true and isCapturing is true
   useEffect(() => {
     if (showIpledge && isCapturing) {
       if (
@@ -62,7 +60,7 @@ const router = useRouter()
             video: {
               width: { ideal: 300 },
               height: { ideal: 300 },
-              facingMode: "user", // Use user for front camera
+              facingMode: "user",
             },
             audio: false,
           })
@@ -79,11 +77,8 @@ const router = useRouter()
           });
       } else {
         alert("Browser does not support getUserMedia");
-        console.error("Browser does not support getUserMedia");
       }
     }
-
-    // Cleanup: stop camera when not capturing or leaving I-pledge
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
@@ -92,81 +87,70 @@ const router = useRouter()
     };
   }, [showIpledge, isCapturing]);
 
-  // Capture image from video
   const captureImage = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-
-    // Set canvas size to match video dimensions
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
-    // Draw the current video frame onto the canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Convert to base64 image
     const dataUrl = canvas.toDataURL("image/png");
     setImage(dataUrl);
     setIsCapturing(false);
   };
 
-  // Download only the I-pledge image with camera photo
   const handleDownload = async () => {
     if (!imageOnlyRef.current) return;
-    
-    // Use html-to-image to capture only the image part (without buttons)
     const dataUrl = await toPng(imageOnlyRef.current);
-    
-    // Download the image
     const link = document.createElement("a");
     link.href = dataUrl;
     const timestamps = new Date();
-    link.download = `${timestamps}-${docData}-i-pledge.png`
+    link.download = `${timestamps}-${docData}-i-pledge.png`;
     link.click();
 
-    // Convert to file for upload
     const response = await fetch(dataUrl);
     const blob = await response.blob();
-    const file = new File([blob], `${timestamps}-${docData}-i-pledge.png`, { type: blob.type });
+    const file = new File([blob], `${timestamps}-${docData}-i-pledge.png`, {
+      type: blob.type,
+    });
 
     try {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
+      const res = await fetch(
+        `/api/presign?filename=${file.name}&type=${file.type}`
+      );
       const { url } = await res.json();
       const uploadRes = await fetch(url, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': file.type,
-          'x-amz-acl': 'public-read'
+          "Content-Type": file.type,
+          "x-amz-acl": "public-read",
         },
         body: file,
       });
-      
+
       if (!uploadRes.ok) {
         toast("Upload failed. Please try again.");
         return;
       }
       if (url) {
-        const saveToDb = await saveIpledge(docData.id, url.split('?')[0])
-        if(saveToDb.status === 200){
-          toast("I-pledge Saved Successfully")
+        const saveToDb = await saveIpledge(docData.id, url.split("?")[0]);
+        if (saveToDb.status === 200) {
+          toast("I-pledge Saved Successfully");
         } else {
-          toast("Error in saving i-pledge")
+          toast("Error in saving i-pledge");
         }
-        router.push("/vitiligo-awareness-month/dashboard")
+        router.push("/vitiligo-awareness-month/dashboard");
       }
     } catch (error) {
-      toast("Error in saving i-pledge")
-      console.log(error)
+      toast("Error in saving i-pledge");
     }
   };
 
-  // Retake logic
   const handleRetake = () => {
     setImage(null);
     setIsCapturing(true);
@@ -260,8 +244,8 @@ const router = useRouter()
               <Button
                 disabled={!isAgree}
                 onClick={() => {
-                  if(!docData){
-                    return toast("kindly select the doctor first")
+                  if (!docData) {
+                    return toast("kindly select the doctor first");
                   }
                   setShowIpledge(true);
                   setIsCapturing(true);
@@ -275,21 +259,17 @@ const router = useRouter()
         </div>
       ) : (
         <div ref={fullComponentRef} className="flex flex-col items-center">
-          {/* I-Pledge Card with Camera - This div contains ONLY the image parts */}
-          <div 
-            ref={imageOnlyRef} 
-            className="relative mx-auto" 
+          <div
+            ref={imageOnlyRef}
+            className="relative mx-auto"
             style={{ width: 400 }}
           >
-            {/* I-pledge template */}
             <img
               src="/I-pledge.png"
               alt="template"
               className="block w-full"
               style={{ maxWidth: 400 }}
             />
-
-            {/* Camera or Captured Image in the circle */}
             <div
               className="absolute"
               style={{
@@ -330,25 +310,46 @@ const router = useRouter()
                 />
               )}
             </div>
-
-            {/* Doctor name */}
-            <div
-              className="absolute w-full text-center"
-              style={{ top: 325 }}
-            >
+            <div className="absolute w-full text-center" style={{ top: 325 }}>
               <p className="text-[#613e92] font-bold text-xl">{docData?.name}</p>
             </div>
           </div>
 
-          {/* Buttons - Outside the imageOnlyRef so they won't be included in the download */}
-          <div className="w-full flex flex-col items-center mt-6" style={{ maxWidth: 400 }}>
+          {/* Action Buttons */}
+          <div className="w-full flex flex-col items-center gap-2 mt-6" style={{ maxWidth: 400 }}>
             {isCapturing && (
+              <>
               <Button
                 onClick={captureImage}
                 className="px-4 py-2 bg-[#0c61aa] text-white rounded w-[80%]"
               >
                 Capture Photo
               </Button>
+              
+              <Button
+                  className="w-[80%] mt-2"
+                  onClick={() => document.getElementById("imageUpload")?.click()}
+                >
+                  Upload Image
+                </Button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="imageUpload"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setImage(reader.result as string);
+                        setIsCapturing(false);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+                </>
             )}
             {!isCapturing && (
               <>
@@ -361,6 +362,7 @@ const router = useRouter()
                 <Button className="w-[80%] mt-2" onClick={handleDownload}>
                   Save and Download
                 </Button>
+                
               </>
             )}
           </div>
