@@ -16,6 +16,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { toPng } from "html-to-image";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -32,6 +40,7 @@ const Page = () => {
   const [isAgree, setisAgree] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [isCapturing, setIsCapturing] = useState(true);
+  const [openDailog, setOpenDailog] = useState(false);
 
   const fullComponentRef = useRef<HTMLDivElement | null>(null);
   const imageOnlyRef = useRef<HTMLDivElement | null>(null);
@@ -48,6 +57,18 @@ const Page = () => {
     };
     getDoctors();
   }, []);
+
+  // useEffect(() => {
+  //   const check = () => {
+  //     console.log(docData);
+  //     if (docData?.id && (!docData?.speciality || !docData?.number)) {
+  //       setOpenDailog(true);
+  //     } else {
+  //       setOpenDailog(false);
+  //     }
+  //   };
+  //   check();
+  // }, [docData]);
 
   useEffect(() => {
     if (showIpledge && isCapturing) {
@@ -301,73 +322,78 @@ const Page = () => {
                   }}
                 />
               )}
-             {!isCapturing && image && (
-               <div
-  style={{
-    position: "relative",
-    width: "200px",
-    height: "200px",
-    borderRadius: "50%",
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }}
->
-  {/* Blurred background */}
-  <img
-    src={image}
-    alt="Blurred Background"
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      objectFit: "contain",
-      filter: "blur(12px)",
-      transform: "scale(1.2)", // slight zoom to hide edges
-      zIndex: 1,
-    }}
-  />
+              {!isCapturing && image && (
+                <div
+                  style={{
+                    position: "relative",
+                    width: "200px",
+                    height: "200px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Blurred background */}
+                  <img
+                    src={image}
+                    alt="Blurred Background"
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      filter: "blur(12px)",
+                      transform: "scale(1.2)", // slight zoom to hide edges
+                      zIndex: 1,
+                    }}
+                  />
 
-  {/* Main Circular Image */}
-  <img
-    src={image}
-    alt="Profile"
-    style={{
-      width: "100%",
-      height: "100%",
-      objectFit: "contain",
-      objectPosition: "center",
-      borderRadius: "50%",
-      zIndex: 2,
-    }}
-  />
-</div>
-
+                  {/* Main Circular Image */}
+                  <img
+                    src={image}
+                    alt="Profile"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      borderRadius: "50%",
+                      zIndex: 2,
+                    }}
+                  />
+                </div>
               )}
-
             </div>
             <div className="absolute w-full text-center" style={{ top: 325 }}>
-              <p className="text-[#613e92] font-bold text-xl">{docData?.name}</p>
+              <p className="text-[#613e92] font-bold text-xl">
+                {docData?.name}
+              </p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="w-full flex flex-col items-center gap-2 mt-6" style={{ maxWidth: 400 }}>
+          <div
+            className="w-full flex flex-col items-center gap-2 mt-6"
+            style={{ maxWidth: 400 }}
+          >
             {isCapturing && (
               <>
-              <Button
-                onClick={captureImage}
-                className="px-4 py-2 bg-[#0c61aa] text-white rounded w-[80%]"
-              >
-                Capture Photo
-              </Button>
-              
-              <Button
+                <Button
+                  onClick={captureImage}
+                  className="px-4 py-2 bg-[#0c61aa] text-white rounded w-[80%]"
+                >
+                  Capture Photo
+                </Button>
+
+                <Button
                   className="w-[80%] mt-2"
-                  onClick={() => document.getElementById("imageUpload")?.click()}
+                  onClick={() =>
+                    document.getElementById("imageUpload")?.click()
+                  }
                 >
                   Upload Image
                 </Button>
@@ -388,7 +414,7 @@ const Page = () => {
                     }
                   }}
                 />
-                </>
+              </>
             )}
             {!isCapturing && (
               <>
@@ -401,13 +427,26 @@ const Page = () => {
                 <Button className="w-[80%] mt-2" onClick={handleDownload}>
                   Save and Download
                 </Button>
-                
               </>
             )}
           </div>
           <canvas ref={canvasRef} style={{ display: "none" }} />
         </div>
       )}
+      <div>
+        <Dialog open={openDailog}>
+          <DialogTrigger></DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

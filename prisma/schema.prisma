@@ -19,37 +19,37 @@ model Mr {
 }
 
 model Doctor {
-  id          String    @id @default(uuid())
-  name        String
-  number      String
-  speciality  String
-  imageUrl    String
-  createdAt   DateTime  @default(now())
-  mrId        String
-  videoId     String?   @unique
-  posterId    String?   @unique
-  ipledgeId   String?   @unique
-  
-  MR          Mr        @relation(fields: [mrId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  name       String
+  number     String?
+  speciality String?
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  mrId       String
+  videoId    String?  @unique
+  posterId   String?  @unique
+  ipledgeId  String?  @unique
+
+  MR Mr @relation(fields: [mrId], references: [id], onDelete: Cascade)
 }
 
 model Video {
-  id     String  @id @default(uuid())
-  url    String?
-  refImageUrl  String
+  id          String  @id @default(uuid())
+  url         String?
+  refImageUrl String
   refVideoUrl String
-  docId  String?
+  docId       String?
 }
 
 model Poster {
-  id     String  @id @default(uuid())
-  url_1  String?
-  url_2  String?
-  docId  String?
+  id    String  @id @default(uuid())
+  url_1 String?
+  url_2 String?
+  docId String?
 }
 
 model IPledge {
-  id     String  @id @default(uuid())
-  url    String
-  docId  String?
+  id    String  @id @default(uuid())
+  url   String
+  docId String?
 }
