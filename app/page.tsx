@@ -8,8 +8,8 @@ const page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // router.push("/vitiligo-awareness-month/dashboard")
-    seedFromExcel();
+    router.push("/vitiligo-awareness-month/dashboard")
+    // seedFromExcel();
   }, []);
   return (
     <div className="w-full h-screen flex items-center justify-center">
