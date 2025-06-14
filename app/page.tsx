@@ -9,8 +9,8 @@ const page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // router.push("/vitiligo-awareness-month/dashboard")
-    seedFromExcel();
+    router.push("/vitiligo-awareness-month/dashboard")
+    // seedFromExcel();
     // downloadFolderFromSpaces('video-storage-bucket2','poster')
   }, []);
   return (
