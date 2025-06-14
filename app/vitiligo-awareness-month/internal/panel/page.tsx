@@ -43,6 +43,7 @@ const Page = () => {
     setLoading(false)
   }
 
+
   const handleDownload = async (file: string, filename: string) => {
     try {
       const res = await fetch(file);
@@ -76,7 +77,7 @@ const Page = () => {
     }
   };
 
-  const uploadVideo = async (e: ChangeEvent<HTMLInputElement>, videoId: string) => {
+  const uploadVideo = async (e: ChangeEvent<HTMLInputElement>, item: any) => {
   const file = e.target.files?.[0];
   if (!file) return;
 
@@ -86,12 +87,17 @@ const Page = () => {
   }
 
   try {
+    const videoId = item.id
     setUploadingIds((prev) => new Set(prev).add(videoId));
+
+    const folderName = "doctor-videos";
+    const filenameWithFolder = `${folderName}/region - ${item.mr.region}/HQ - ${item.mr.Hq}/${item.mr.name}/${item.doctor.name}/${item.doctor.name}.mp4`;
+
 
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
+    const res = await fetch(`/api/presign?filename=${encodeURIComponent(filenameWithFolder)}&type=${encodeURIComponent(file.type)}`);
     const { url } = await res.json();
 
     const uploadRes = await fetch(url, {
@@ -134,7 +140,7 @@ const Page = () => {
     console.error(error);
     setUploadingIds((prev) => {
       const newSet = new Set(prev);
-      newSet.delete(videoId);
+      newSet.delete(item.id);
       return newSet;
     });
   }
@@ -234,9 +240,9 @@ const Page = () => {
             <tr>
               <th className="border px-4 py-2">Mr Name</th>
               <th className="border px-4 py-2">Mr Id</th>
-              <th className="border px-4 py-2">HQ</th>
-              <th className="border px-4 py-2">Designation</th>
               <th className="border px-4 py-2">Region</th>
+              <th className="border px-4 py-2">Designation</th>
+              <th className="border px-4 py-2">HQ</th>
               <th className="border px-4 py-2">Doctor name</th>
               <th className="border px-4 py-2">
                 {report === "video"
@@ -326,7 +332,7 @@ const Page = () => {
                         accept="video/*"
                         id={`upload-${item.id}`}
                         hidden
-                        onChange={(e) => uploadVideo(e, item.id)}
+                        onChange={(e) => uploadVideo(e, item)}
                       />
                       <Button
                         type="button"
