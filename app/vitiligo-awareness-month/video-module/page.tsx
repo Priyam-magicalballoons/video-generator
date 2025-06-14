@@ -170,7 +170,7 @@ if (!uploadRes.ok) {
     const getDoctors = async()=> 
     {
         const data = await getAllDoctors()
-        const filteredDocs = data.filter((d)=>d.videoId === null)
+        const filteredDocs = data.filter((d)=>d?.videoId === null)
         setAllDoctors(filteredDocs)
     }
     getDoctors()
