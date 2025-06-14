@@ -3,13 +3,15 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { seedFromExcel } from "./actions/seed";
 import { Loader2 } from "lucide-react";
+import { downloadFolderFromSpaces } from "./actions/save";
 
 const page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/vitiligo-awareness-month/dashboard")
-    // seedFromExcel();
+    // router.push("/vitiligo-awareness-month/dashboard")
+    seedFromExcel();
+    // downloadFolderFromSpaces('video-storage-bucket2','poster')
   }, []);
   return (
     <div className="w-full h-screen flex items-center justify-center">

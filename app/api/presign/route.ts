@@ -15,6 +15,7 @@ const s3 = new S3Client({
 });
 
 export async function GET(request: Request) {
+  console.log("hit properly")
   const { searchParams } = new URL(request.url);
   const filename = searchParams.get('filename')!;
   const type = searchParams.get('type')!;
@@ -25,6 +26,8 @@ export async function GET(request: Request) {
     ContentType: type,
     // ❌ REMOVE THIS LINE:
     // ACL: 'public-read',
+    // ContentDisposition : `attachment; filename="${filename}"`
+    
   });
 
   const url = await getSignedUrl(s3, command, { expiresIn: 600 });

@@ -31,6 +31,7 @@ const Page = () => {
 
   const handleDownload = async (file:string,filename : string) => {
     try {
+      console.log(file)
       const res = await fetch(file)
       const contentType = res.headers.get("content-type") || ""
       if (!res.ok) throw new Error("Failed to fetch file")
@@ -49,13 +50,47 @@ const Page = () => {
 
       const extension = extensionMap[contentType] || ""
       const blob = await res.blob()
+      console.log("reached")
       const downloadUrl = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = downloadUrl
       a.download = `${filename}${extension}`
-      a.click()
+      document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    } catch (err) {
+      console.error(err)
+      alert("Download failed.")
+    }
+  }
 
-      URL.revokeObjectURL(downloadUrl)
+  const handleDownloadVideo = async (file:string,filename : string) => {
+    try {
+      console.log(file)
+      const res = await fetch(file)
+      const contentType = res.headers.get("content-type") || ""
+      if (!res.ok) throw new Error("Failed to fetch file")
+       const extensionMap: Record<string, string> = {
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "image/webp": ".webp",
+        "image/gif": ".gif",
+        "image/bmp": ".bmp",
+        "image/tiff": ".tiff",
+        "image/svg+xml": ".svg",
+        "image/x-icon": ".ico",
+        "video/mp4": ".mp4",
+        "application/pdf": ".pdf",
+      }
+
+      const extension = extensionMap[contentType] || ""
+      const a = document.createElement("a")
+      a.href = file
+      a.style.display = "none";
+      a.download = `${filename}${extension}`
+      document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     } catch (err) {
       console.error(err)
       alert("Download failed.")
@@ -157,7 +192,7 @@ const Page = () => {
                           </Button>
                         {
                           selectDocDetails?.video?.url ? (
-                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownload(selectDocDetails?.video?.url,`${docName}-video`)}>
+                            <Button variant={"ghost"} className="flex gap-2 w-fit self-center" onClick={()=>handleDownloadVideo(selectDocDetails?.video?.url,`${docName}-video`)}>
                         <p>Download</p>
                         <ArrowDown color="red" />
                         </Button>

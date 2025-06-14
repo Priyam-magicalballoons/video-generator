@@ -116,6 +116,15 @@ export const getAllDoctorPosters = async () => {
 
 export const getAllDoctorIpledges = async () => {
   try {
+
+
+    //  const orphanedIpledges = await prisma.$queryRaw`
+    //   SELECT * FROM "IPledge"
+    //   WHERE "docId" IS NOT NULL
+    //   AND "docId" NOT IN (SELECT "id" FROM "Doctor");
+    // `;
+    // console.log(orphanedIpledges)
+
     const ipledges = await prisma.iPledge.findMany({
       select: {
         docId: true,
@@ -142,7 +151,9 @@ export const getAllDoctorIpledges = async () => {
         };
       })
     );
-
+    
+    console.log(doctorsWithIpledges)
+    
     const docWithIpledgeWithMr = await Promise.all(
       doctorsWithIpledges.map(async(doc)=>{
         const mr = await prisma.mr.findUnique({

@@ -52,7 +52,7 @@ const Page = () => {
   useEffect(() => {
     const getDoctors = async () => {
       const data = await getAllDoctors();
-      const filteredDocs = data?.filter((d) => d.ipledgeId === null);
+      const filteredDocs = data?.filter((d) => d?.ipledgeId === null);
       setAllDoctors(filteredDocs);
     };
     getDoctors();
@@ -124,7 +124,8 @@ const Page = () => {
 
   const handleDownload = async () => {
     if (!imageOnlyRef.current) return;
-    const dataUrl = await toPng(imageOnlyRef.current);
+    const dataUrl = await toPng(imageOnlyRef.current,{ quality : 0.7, width:400});
+    
     const link = document.createElement("a");
     link.href = dataUrl;
     const timestamps = new Date();
@@ -163,12 +164,12 @@ const Page = () => {
         if (saveToDb.status === 200) {
           toast("I-pledge Saved Successfully");
         } else {
-          toast("Error in saving i-pledge");
+          toast("Error in saving i-pledge to database");
         }
         router.push("/vitiligo-awareness-month/dashboard");
       }
     } catch (error) {
-      toast("Error in saving i-pledge");
+      toast("Error in saving i-pledge from server");
     }
   };
 

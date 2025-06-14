@@ -7,6 +7,25 @@ import prisma from "@/lib/prisma";
 
 export async function seedFromExcel() {
   try {
+
+    // const uploadToIpldege = await prisma.iPledge.create({
+    //   data : {
+    //     url : "https://video-storage-bucket2.blr1.cdn.digitaloceanspaces.com/apeksha%20chaudhari.jpeg",
+    //     docId : "bb51745b-ac54-437e-9952-2ae9202e71d8"
+    //   }
+    // })
+
+    // console.log(uploadToIpldege)
+    // await prisma.doctor.update({
+    //   where : {
+    //     id : uploadToIpldege.docId!
+    //   },data : {
+    //     ipledgeId : uploadToIpldege.id
+    //   }
+    // })
+
+    return
+
     const filePath = path.join(process.cwd(), "public", "final.xlsx");
     const fileBuffer = await fs.readFile(filePath);
     const workbook = read(fileBuffer, { type: "buffer" });

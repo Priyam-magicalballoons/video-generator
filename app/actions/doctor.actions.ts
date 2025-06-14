@@ -42,25 +42,42 @@ export const getAllDoctors = async (type:string = "")=>{
       id : true,
       videoId : true,
       ipledgeId : true,
-      posterId : true
+      posterId : true,
     }
   })
 
+  const videos = await Promise.all(retrieve.map(async(doc)=>{
+    if(doc.videoId){
+    const video = await prisma.video.findFirst({
+      where : {
+        id : doc.videoId
+      },select : {
+        url : true
+      }
+    })
+    return {
+      ...doc,
+      video
+    }
+  }
+  }))
 
   if(type === "poster"){
-    const posterUrls = await Promise.all(retrieve.map(async(doc)=>{
-      const url = await prisma.poster.findFirst({
-        where : {
-          docId : doc.id
-        },select : {
-          url_1 : true,
-          url_2 : true
+    const posterUrls = await Promise.all(videos.map(async(doc)=>{
+      if(doc){
+        const url = await prisma.poster.findFirst({
+          where : {
+            docId : doc?.id,
+          },select : {
+            url_1 : true,
+            url_2 : true
+          }
+        })
+        
+        return {
+          ...doc,
+          url
         }
-      })
-
-      return {
-        ...doc,
-        url
       }
     }))
 
@@ -70,21 +87,17 @@ export const getAllDoctors = async (type:string = "")=>{
   return retrieve
 }
 
-export const editDoctor = async (name : string,number:string,imageUrl : string, speciality:string,id:string) => {
+export const editDoctor = async (number:string,id:string) => {
   try {
     const edit = await prisma.doctor.update({
     where : {
       id
     },
     data : {
-      imageUrl,
-      name,
       number,
-      speciality
     }
   })
 
-  console.log(edit)
   if(edit){
     return {
       status : 200,

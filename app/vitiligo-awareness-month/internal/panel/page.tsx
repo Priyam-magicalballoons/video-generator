@@ -17,7 +17,7 @@ import * as XLSX from "xlsx";
 
 const Page = () => {
   const [allData, setAllData] = useState<any[]>([]);
-  const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [uploadingIds, setUploadingIds] = useState<Set<string>>(new Set());
   const [report, setReport] = useState<"video" | "poster" | "i-pledge">("video")
   const [loading, setLoading] = useState(false)
 
@@ -77,49 +77,69 @@ const Page = () => {
   };
 
   const uploadVideo = async (e: ChangeEvent<HTMLInputElement>, videoId: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    if (!file.type.startsWith("video/")) {
-      toast("Kindly upload a valid video file.");
+  if (!file.type.startsWith("video/")) {
+    toast("Kindly upload a valid video file.");
+    return;
+  }
+
+  try {
+    setUploadingIds((prev) => new Set(prev).add(videoId));
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
+    const { url } = await res.json();
+
+    const uploadRes = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+        "x-amz-acl": "public-read",
+      },
+      body: file,
+    });
+
+    if (!uploadRes.ok) {
+      toast("Upload failed. Please try again.");
+      setUploadingIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(videoId);
+        return newSet;
+      });
       return;
     }
-    try {
-      setUploadingId(videoId);
 
-      const formData = new FormData();
-      formData.append("file", file);
+    const cleanUrl = url.split("?")[0];
+    const update = await updateUrl(videoId, cleanUrl);
 
-      const res = await fetch(`/api/presign?filename=${file.name}&type=${file.type}`);
-      const { url } = await res.json();
+   if (update?.data?.url) {
+  setAllData((prev) =>
+    prev.map((item) =>
+      item.id === videoId ? { ...item, url: update.data.url } : item
+    )
+  );
+  setUploadingIds((prev) => {
+    const newSet = new Set(prev);
+    newSet.delete(videoId);
+    return newSet;
+  });
+  toast.success("Video uploaded successfully");
+}
 
-      const uploadRes = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file.type,
-          "x-amz-acl": "public-read",
-        },
-        body: file,
-      });
+  } catch (error) {
+    console.error(error);
+    setUploadingIds((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(videoId);
+      return newSet;
+    });
+  }
+};
 
-      if (!uploadRes.ok) {
-        toast("Upload failed. Please try again.");
-        setUploadingId(null);
-        return;
-      }
-
-      const cleanUrl = url.split("?")[0];
-      const update = await updateUrl(videoId, cleanUrl);
-
-      if (update?.data?.url) {
-        setUploadingId(null);
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error(error);
-      setUploadingId(null);
-    }
-  };
 
   function exportTableToExcel(
   tableId: string,
@@ -312,7 +332,7 @@ const Page = () => {
                         type="button"
                         onClick={() => document.getElementById(`upload-${item.id}`)?.click()}
                       >
-                        {uploadingId === item.id ? (
+                        {uploadingIds.has(item.id) ? (
                           <div className="flex items-center gap-2">
                             <Loader2 className="animate-spin h-4 w-4" />
                             <span>Uploading</span>

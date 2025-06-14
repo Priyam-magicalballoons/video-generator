@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma"
 
 export const createPosters = async (docId:string,poster_1_url:string,poster_2_url:string)=> {
 
+
     try {
         const checkExistingPoster = await prisma.doctor.findUnique({
         where : {
@@ -37,7 +38,6 @@ export const createPosters = async (docId:string,poster_1_url:string,poster_2_ur
         }
     }else{
         if(poster_1_url){
-            console.log("updating poster 1")
             const updatePoster1 = await prisma.poster.update({
                 where : {
                     id : checkExistingPoster.posterId
@@ -51,7 +51,6 @@ export const createPosters = async (docId:string,poster_1_url:string,poster_2_ur
                 status : 200,
             }
         }else if(poster_2_url){
-            console.log("updating poster 2")
              const updatePoster2 = await prisma.poster.update({
                 where : {
                     id : checkExistingPoster.posterId
