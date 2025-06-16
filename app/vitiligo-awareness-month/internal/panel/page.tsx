@@ -56,7 +56,8 @@ const formatDuration = (duration: number) => {
   setAllData(data || []);
 
   const durationsMap: Record<string, number> = {};
-
+  
+  setLoading(false);
   await Promise.all(
     (data || []).map(async (item) => {
       try {
@@ -71,7 +72,6 @@ const formatDuration = (duration: number) => {
   );
 
   setVideoDurations(durationsMap);
-  setLoading(false);
 };
 
 
