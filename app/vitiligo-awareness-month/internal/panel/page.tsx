@@ -223,7 +223,7 @@ const Page = () => {
                 ? "poster-table.xlsx"
                 : "i-pledge-table.xlsx"
             }`,
-            [8]
+            [9]
           )
         }
       >
