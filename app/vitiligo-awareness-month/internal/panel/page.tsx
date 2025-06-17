@@ -195,7 +195,7 @@ const formatDuration = (duration: number) => {
     }
   };
 
-  function exportTableToExcel(tableId: string, fileName: string = "export.xlsx") {
+ function exportTableToExcel(tableId: string, fileName: string = "export.xlsx", numberOfColumns: number = 7) {
   const table = document.getElementById(tableId) as HTMLTableElement;
   if (!table) {
     console.error("Table not found:", tableId);
@@ -205,6 +205,13 @@ const formatDuration = (duration: number) => {
   // Clone the table so we don't modify the DOM
   const tableClone = table.cloneNode(true) as HTMLTableElement;
 
+  // Remove columns beyond numberOfColumns
+  Array.from(tableClone.rows).forEach((row) => {
+    while (row.cells.length > numberOfColumns) {
+      row.deleteCell(numberOfColumns); // always delete at the index that equals numberOfColumns
+    }
+  });
+
   // Convert to worksheet and workbook
   const ws = XLSX.utils.table_to_sheet(tableClone);
   const wb = XLSX.utils.book_new();
@@ -213,6 +220,7 @@ const formatDuration = (duration: number) => {
   // Export to Excel file
   XLSX.writeFile(wb, fileName);
 }
+
 
   useEffect(() => {
     console.log(report);
@@ -248,7 +256,7 @@ const formatDuration = (duration: number) => {
         <div>
           <Button
             onClick={() =>
-             exportTableToExcel("doctor-table", `${report}-table.xlsx`)
+             exportTableToExcel("doctor-table", `${report}-table.xlsx`,report === "video" ? 10 : 7)
             }
           >
             Export To Excel
