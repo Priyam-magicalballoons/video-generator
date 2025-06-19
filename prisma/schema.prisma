@@ -39,6 +39,7 @@ model Video {
   refImageUrl String
   refVideoUrl String
   docId       String?
+  createdAt   DateTime @default(now())
 }
 
 model Poster {
@@ -46,10 +47,12 @@ model Poster {
   url_1 String?
   url_2 String?
   docId String?
+  createdAt   DateTime @default(now())
 }
 
 model IPledge {
   id    String  @id @default(uuid())
   url   String
   docId String?
+  createdAt   DateTime @default(now())
 }

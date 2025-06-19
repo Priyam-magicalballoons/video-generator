@@ -53,25 +53,26 @@ const formatDuration = (duration: number) => {
  const getAllVideoData = async () => {
   setLoading(true);
   const data = await getAllDoctorVideos();
+  console.log(data)
   setAllData(data || []);
 
-  const durationsMap: Record<string, number> = {};
+  // const durationsMap: Record<string, number> = {};
   
   setLoading(false);
-  await Promise.all(
-    (data || []).map(async (item) => {
-      try {
-        if (item.url) {
-          const duration = await fetchVideoDuration(item.url);
-          durationsMap[item.url] = duration;
-        }
-      } catch (error) {
-        console.error("Error loading video duration:", error);
-      }
-    })
-  );
+  // await Promise.all(
+  //   (data || []).map(async (item) => {
+  //     try {
+  //       if (item.url) {
+  //         const duration = await fetchVideoDuration(item.url);
+  //         durationsMap[item.url] = duration;
+  //       }
+  //     } catch (error) {
+  //       console.error("Error loading video duration:", error);
+  //     }
+  //   })
+  // );
 
-  setVideoDurations(durationsMap);
+  // setVideoDurations(durationsMap);
 };
 
 
@@ -256,7 +257,11 @@ const formatDuration = (duration: number) => {
         <div>
           <Button
             onClick={() =>
-             exportTableToExcel("doctor-table", `${report}-table.xlsx`,report === "video" ? 10 : 7)
+              exportTableToExcel(
+                "doctor-table",
+                `${report}-table.xlsx`,
+                report === "video" ? 10 : 7
+              )
             }
           >
             Export To Excel
@@ -297,13 +302,13 @@ const formatDuration = (duration: number) => {
                       ? "Poster 2 url"
                       : ""}
                   </th>
-                  <th
+                  {/* <th
                     className={`border px-4 py-2 ${
                       report !== "video" ? "hidden" : ""
                     }`}
                   >
                     Video Duration
-                  </th>
+                  </th> */}
                   <th
                     className={`border px-4 py-2 ${
                       report !== "video" ? "hidden" : ""
@@ -382,11 +387,15 @@ const formatDuration = (duration: number) => {
                           : ""}
                       </p>
                     </td>
-                    <td className={`border px-4 py-2 ${report !== "video" ? "hidden" : ""}`}>
-  {videoDurations[item.url]
-    ? formatDuration(videoDurations[item.url])
-    : "Loading..."}
-</td>
+                    {/* <td
+                      className={`border px-4 py-2 ${
+                        report !== "video" ? "hidden" : ""
+                      }`}
+                    >
+                      {videoDurations[item.url]
+                        ? formatDuration(videoDurations[item.url])
+                        : "Loading..."}
+                    </td> */}
 
                     <td
                       className={`border px-4 py-2 ${
