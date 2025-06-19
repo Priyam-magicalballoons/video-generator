@@ -10,7 +10,17 @@ export const getAllDoctorVideos = async () => {
         refVideoUrl: true,
         url: true,
         id: true,
-      },
+      }, orderBy : [
+        {
+          createdAt : "asc"
+        },
+        {
+          url : {
+            sort : "asc",
+            nulls : "last"
+          }
+        }
+      ]
     });
 
     const doctorsWithVideos = await Promise.all(
