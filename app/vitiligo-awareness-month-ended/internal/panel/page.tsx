@@ -26,56 +26,56 @@ const Page = () => {
     "video"
   );
   const [loading, setLoading] = useState(false);
-  const [videoDurations, setVideoDurations] = useState<Record<string, number>>({});
-
+  const [videoDurations, setVideoDurations] = useState<Record<string, number>>(
+    {}
+  );
 
   const fetchVideoDuration = (url: string): Promise<number> => {
-  return new Promise((resolve, reject) => {
-    const video = document.createElement("video");
-    video.preload = "metadata";
-    video.src = url;
-    video.onloadedmetadata = () => {
-      resolve(video.duration);
-    };
-    video.onerror = (e) => {
-      reject(`Failed to load video: ${url}`);
-    };
-  });
-};
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.src = url;
+      video.onloadedmetadata = () => {
+        resolve(video.duration);
+      };
+      video.onerror = (e) => {
+        reject(`Failed to load video: ${url}`);
+      };
+    });
+  };
 
-const formatDuration = (duration: number) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
-  return `${minutes < 10 ? "0"+minutes : minutes} : ${seconds.toString().padStart(2, "0")}`;
-};
+  const formatDuration = (duration: number) => {
+    const minutes = Math.floor(duration / 60);
+    const seconds = Math.floor(duration % 60);
+    return `${minutes < 10 ? "0" + minutes : minutes} : ${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
+  const getAllVideoData = async () => {
+    setLoading(true);
+    const data = await getAllDoctorVideos();
+    console.log(data);
+    setAllData(data || []);
 
- const getAllVideoData = async () => {
-  setLoading(true);
-  const data = await getAllDoctorVideos();
-  console.log(data)
-  setAllData(data || []);
+    const durationsMap: Record<string, number> = {};
 
-  // const durationsMap: Record<string, number> = {};
-  
-  setLoading(false);
-  // await Promise.all(
-  //   (data || []).map(async (item) => {
-  //     try {
-  //       if (item.url) {
-  //         const duration = await fetchVideoDuration(item.url);
-  //         durationsMap[item.url] = duration;
-  //       }
-  //     } catch (error) {
-  //       console.error("Error loading video duration:", error);
-  //     }
-  //   })
-  // );
+    setLoading(false);
+    await Promise.all(
+      (data || []).map(async (item) => {
+        try {
+          if (item.url) {
+            const duration = await fetchVideoDuration(item.url);
+            durationsMap[item.url] = duration;
+          }
+        } catch (error) {
+          console.error("Error loading video duration:", error);
+        }
+      })
+    );
 
-  // setVideoDurations(durationsMap);
-};
-
-
+    setVideoDurations(durationsMap);
+  };
 
   const getAllPosterData = async () => {
     setLoading(true);
@@ -196,32 +196,35 @@ const formatDuration = (duration: number) => {
     }
   };
 
- function exportTableToExcel(tableId: string, fileName: string = "export.xlsx", numberOfColumns: number = 7) {
-  const table = document.getElementById(tableId) as HTMLTableElement;
-  if (!table) {
-    console.error("Table not found:", tableId);
-    return;
-  }
-
-  // Clone the table so we don't modify the DOM
-  const tableClone = table.cloneNode(true) as HTMLTableElement;
-
-  // Remove columns beyond numberOfColumns
-  Array.from(tableClone.rows).forEach((row) => {
-    while (row.cells.length > numberOfColumns) {
-      row.deleteCell(numberOfColumns); // always delete at the index that equals numberOfColumns
+  function exportTableToExcel(
+    tableId: string,
+    fileName: string = "export.xlsx",
+    numberOfColumns: number = 7
+  ) {
+    const table = document.getElementById(tableId) as HTMLTableElement;
+    if (!table) {
+      console.error("Table not found:", tableId);
+      return;
     }
-  });
 
-  // Convert to worksheet and workbook
-  const ws = XLSX.utils.table_to_sheet(tableClone);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    // Clone the table so we don't modify the DOM
+    const tableClone = table.cloneNode(true) as HTMLTableElement;
 
-  // Export to Excel file
-  XLSX.writeFile(wb, fileName);
-}
+    // Remove columns beyond numberOfColumns
+    Array.from(tableClone.rows).forEach((row) => {
+      while (row.cells.length > numberOfColumns) {
+        row.deleteCell(numberOfColumns);
+      }
+    });
 
+    // Convert to worksheet and workbook
+    const ws = XLSX.utils.table_to_sheet(tableClone);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Export to Excel file
+    XLSX.writeFile(wb, fileName);
+  }
 
   useEffect(() => {
     console.log(report);
@@ -302,13 +305,13 @@ const formatDuration = (duration: number) => {
                       ? "Poster 2 url"
                       : ""}
                   </th>
-                  {/* <th
+                  <th
                     className={`border px-4 py-2 ${
                       report !== "video" ? "hidden" : ""
                     }`}
                   >
                     Video Duration
-                  </th> */}
+                  </th>
                   <th
                     className={`border px-4 py-2 ${
                       report !== "video" ? "hidden" : ""
@@ -387,7 +390,7 @@ const formatDuration = (duration: number) => {
                           : ""}
                       </p>
                     </td>
-                    {/* <td
+                    <td
                       className={`border px-4 py-2 ${
                         report !== "video" ? "hidden" : ""
                       }`}
@@ -395,7 +398,7 @@ const formatDuration = (duration: number) => {
                       {videoDurations[item.url]
                         ? formatDuration(videoDurations[item.url])
                         : "Loading..."}
-                    </td> */}
+                    </td>
 
                     <td
                       className={`border px-4 py-2 ${

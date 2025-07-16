@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { useEffect } from "react";
 
 export const getAllDoctorVideos = async () => {
   try {
@@ -22,6 +23,8 @@ export const getAllDoctorVideos = async () => {
         }
       ]
     });
+
+
 
     const doctorsWithVideos = await Promise.all(
       videos.map(async (video) => {
