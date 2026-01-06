@@ -259,13 +259,14 @@ const Page = () => {
 
         <div>
           <Button
-            onClick={() =>
-              exportTableToExcel(
-                "doctor-table",
-                `${report}-table.xlsx`,
-                report === "video" ? 10 : 7
-              )
-            }
+            // onClick={() =>
+            //   exportTableToExcel(
+            //     "doctor-table",
+            //     `${report}-table.xlsx`,
+            //     report === "video" ? 10 : 7
+            //   )
+            // }
+            className="active:border-b-0 border-b-2 border-green-600 hover:bg-green-400 bg-green-400 text-black"
           >
             Export To Excel
           </Button>

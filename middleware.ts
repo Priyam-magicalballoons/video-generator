@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   }
 
   const protectedRoutes = [
-    "/",
+    // "/",
     "/doctors",
     "/vitiligo-awareness-month",
     "/vitiligo-awareness-month/i-pledge",

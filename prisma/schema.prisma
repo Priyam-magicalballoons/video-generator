@@ -34,7 +34,7 @@ model Doctor {
 }
 
 model Video {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   url         String?
   refImageUrl String
   refVideoUrl String
@@ -43,16 +43,16 @@ model Video {
 }
 
 model Poster {
-  id    String  @id @default(uuid())
-  url_1 String?
-  url_2 String?
-  docId String?
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  url_1     String?
+  url_2     String?
+  docId     String?
+  createdAt DateTime @default(now())
 }
 
 model IPledge {
-  id    String  @id @default(uuid())
-  url   String
-  docId String?
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  url       String
+  docId     String?
+  createdAt DateTime @default(now())
 }

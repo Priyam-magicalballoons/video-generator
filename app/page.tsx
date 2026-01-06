@@ -4,12 +4,15 @@ import React, { useEffect } from "react";
 import { seedFromExcel } from "./actions/seed";
 import { Loader2 } from "lucide-react";
 import { downloadFolderFromSpaces } from "./actions/save";
+import { downloadBucketToLocal } from "./actions/download-all-data";
 
 const page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/vitiligo-awareness-month/dashboard")
+    // console.log("working");
+    // downloadBucketToLocal();
+    router.push("/vitiligo-awareness-month/dashboard");
     // seedFromExcel();
     // downloadFolderFromSpaces('video-storage-bucket2','poster')
   }, []);
