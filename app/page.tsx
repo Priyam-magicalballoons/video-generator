@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { seedFromExcel } from "./actions/seed";
 import { Loader2 } from "lucide-react";
 import { downloadFolderFromSpaces } from "./actions/save";
-import { downloadBucketToLocal } from "./actions/download-all-data";
+// import { downloadBucketToLocal } from "./actions/download-all-data";
 
 const page = () => {
   const router = useRouter();
